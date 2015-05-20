@@ -12,7 +12,7 @@ curl -s -O http://downloadmirror.intel.com/24910/eng/edison-src-ww18-15.tgz
 
 echo "Unpacking..."
 
-[ -e edison-src ] && rm -rf edison-src
+[ -e edison-src ] && sudo rm -rf edison-src
 
 tar zxf edison-src-ww18-15.tgz
 
