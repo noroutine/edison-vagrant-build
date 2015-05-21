@@ -51,6 +51,24 @@ Vagrant.configure(2) do |config|
     vb.memory = "2048"
     vb.cpus = 4
     vb.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
+    file_to_disk = File.realpath( "." ).to_s + "/disk.vdi"
+
+    if ARGV[0] == "up" && ! File.exist?(file_to_disk)
+       puts "Creating 30GB disk #{file_to_disk}."
+       vb.customize [
+            'createhd',
+            '--filename', file_to_disk,
+            '--format', 'VDI',
+            '--size', 400000 * 1024 # 40 GB
+            ]
+       vb.customize [
+            'storageattach', :id,
+            '--storagectl', 'SATA Controller',
+            '--port', 1, '--device', 0,
+            '--type', 'hdd', '--medium',
+            file_to_disk
+            ]
+    end
   end
   #
   # View the documentation for the provider you are using for more
