@@ -43,6 +43,7 @@ Vagrant.configure(2) do |config|
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
   #
+
   config.vm.provider "virtualbox" do |vb|
   #   # Display the VirtualBox GUI when booting the machine
   #   vb.gui = true
@@ -51,6 +52,24 @@ Vagrant.configure(2) do |config|
     vb.memory = "2048"
     vb.cpus = 4
     vb.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
+
+    VAGRANT_ROOT = File.dirname(File.expand_path(__FILE__))
+    file_to_disk = File.join(VAGRANT_ROOT, 'disk.vdi')
+    if ARGV[0] == "up" && ! File.exist?(file_to_disk)
+       vb.customize [
+            'createhd',
+            '--filename', file_to_disk,
+            '--format', 'VDI',
+            '--size', 400000 * 1024 # 400 TB
+            ]
+       vb.customize [
+            'storageattach', :id,
+            '--storagectl', 'SATA Controller',
+            '--port', 1, '--device', 0,
+            '--type', 'hdd', '--medium',
+            file_to_disk
+            ]
+    end
   end
   #
   # View the documentation for the provider you are using for more

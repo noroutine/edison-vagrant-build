@@ -6,9 +6,14 @@ echo "Installing necessary toolset..."
 sudo apt-get update
 sudo apt-get install -y build-essential git diffstat gawk chrpath texinfo libtool gcc-multilib
 
-echo "Downloading edison image sources"
+echo "Preparing the folder..."
+sudo mkdir /edison
+sudo mkfs.ext4 /mnt/sdb
+sudo mount -t ext4 /dev/sdb /edison
+sudo chown vagrant.vagrant /edison
+cd /edison
 
-cd /vagrant
+echo "Downloading edison image sources"
 
 curl -s -O http://downloadmirror.intel.com/24910/eng/edison-src-ww18-15.tgz
 
